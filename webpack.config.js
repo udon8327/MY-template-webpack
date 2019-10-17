@@ -11,10 +11,14 @@ module.exports = {
   output: {
     path: pathResolve("dist"),
     filename: "index.bundle.js"
+	},
+  devServer: {
+    port: 9000,
+    // open: true,
   },
   module: {
     rules: [
-			//將sass轉成css
+			//解析sass
       {
         test: /\.sass$/,
         use: [
@@ -25,11 +29,25 @@ module.exports = {
 					'sass-loader'
         ],
 			},
-			//將pug轉成html
+			//解析pug
       {
         test: /\.pug$/,
 				use: ['pug-loader']
-      }
+			},
+			//解析圖片
+      {
+        test: /\.(gif|png|jpe?g|svg)$/i,
+				use: [
+					{
+						loader: 'url-loader',
+						options: {
+							name: '[name].[ext]',
+							outputPath: 'img/',
+							// limit: 8192
+						}
+					}
+				]
+      },
     ]
   },
   plugins: [
@@ -46,8 +64,4 @@ module.exports = {
 		//自動清空dist資料夾
 		new CleanWebpackPlugin()
 	],
-  devServer: {
-    port: 9000,
-    // open: true,
-  }
 };
