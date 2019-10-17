@@ -22,19 +22,24 @@ module.exports = {
 					'css-loader',
 					'sass-loader'
         ],
+			},
+			//將pug轉成html
+      {
+        test: /\.pug$/,
+				use: ['pug-loader']
       }
     ]
   },
   plugins: [
 		//自動生成執行用html檔案
     new HtmlWebPackPlugin({
-			template: "./src/index.html",
+			template: "./src/index.pug",
 			filename: 'index.html',
       hash: true
 		}),
 		//將css從js獨立拆出來
     new MiniCssExtractPlugin({
-      filename: 'css/styles.[contenthash:7].css',
+      filename: 'css/[name].[contenthash:7].css',
 		}),
 		//自動清空dist資料夾
 		new CleanWebpackPlugin()
