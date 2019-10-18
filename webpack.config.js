@@ -1,4 +1,5 @@
 const path = require("path");
+const webpack = require('webpack');
 const HtmlWebPackPlugin = require("html-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
@@ -23,9 +24,9 @@ module.exports = {
 				use: [
 					{
 						loader: MiniCssExtractPlugin.loader,
-            options: {
-              publicPath: '../',
-            },
+						options: {
+							publicPath: '../',
+						},
 					},
 					'css-loader',
 					'sass-loader'
@@ -62,6 +63,9 @@ module.exports = {
 		//將css從js獨立拆出來
 		new MiniCssExtractPlugin({
 			filename: 'css/[name].[contenthash:7].css',
+		}),
+		new webpack.ProvidePlugin({
+			$: "jquery"
 		}),
 		//自動清空dist資料夾
 		new CleanWebpackPlugin()
