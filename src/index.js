@@ -1,1 +1,1 @@
-import css from './index.sass';
+import css from './sass/index.sass';
