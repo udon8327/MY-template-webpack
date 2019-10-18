@@ -4,12 +4,11 @@ const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 
 const devMode = process.env.NODE_ENV !== 'production';
-const pathResolve = targetPath => path.resolve(__dirname, targetPath);
 
 module.exports = {
 	entry: "./src/index.js",
 	output: {
-		path: pathResolve("dist"),
+		path: path.resolve(__dirname, "dist"),
 		filename: "[name].js"
 	},
 	devServer: {
@@ -24,6 +23,9 @@ module.exports = {
 				use: [
 					{
 						loader: MiniCssExtractPlugin.loader,
+            options: {
+              publicPath: '../',
+            },
 					},
 					'css-loader',
 					'sass-loader'
@@ -42,7 +44,6 @@ module.exports = {
 						loader: 'url-loader',
 						options: {
 							name: '[name].[ext]',
-							publicPath: '../img',
 							outputPath: 'img',
 							limit: '1000'
 						}
