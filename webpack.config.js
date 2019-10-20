@@ -1,7 +1,7 @@
 const webpack = require('webpack');
 const HtmlWebPackPlugin = require("html-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
-const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+const {CleanWebpackPlugin} = require('clean-webpack-plugin');
 
 module.exports = {
 	entry: "./src/index.js",
@@ -16,11 +16,7 @@ module.exports = {
 	module: {
 		rules: [
 			{
-				test: /\.css$/,
-				use: ['style-loader','css-loader']
-			},
-			{
-				test: /\.sass$/,
+				test: /\.(s?css|sass)$/,
 				use: [
 					{
 						loader: MiniCssExtractPlugin.loader,
@@ -36,19 +32,37 @@ module.exports = {
 				test: /\.pug$/,
 				use: ['html-loader','pug-html-loader']
 			},
-			{
-				test: /\.(woff|woff2|eot|ttf|otf|png|svg|jpg|gif)$/,
-				use: [
-					{
-						loader: 'url-loader',
-						options: {
-							name: '[name].[ext]',
-							outputPath: 'img',
-							limit: '1000'
-						}
-					}
-				]
+      {
+        test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
+        loader: 'url-loader',
+        options: {
+          limit: 10000,
+					name: 'img/[name].[hash:7].[ext]',
+        }
+      },
+      {
+        test: /\.(mp4|webm|ogg|mp3|wav|flac|aac)(\?.*)?$/,
+        loader: 'url-loader',
+        options: {
+          limit: 10000,
+					name: 'media/[name].[hash:7].[ext]',
+        }
+      },
+      {
+        test: /\.(woff2?|eot|ttf|otf)(\?.*)?$/,
+        loader: 'url-loader',
+        options: {
+          limit: 10000,
+					name: 'fonts/[name].[hash:7].[ext]',
+        }
 			},
+			{
+				test: /\.(js?x)?$/,
+				use: {
+					loader: "babel-loader"
+				}, 
+				exclude: /node_modules/
+			}
 		]
 	},
 	plugins: [
@@ -66,7 +80,7 @@ module.exports = {
 			$: "jquery"
 		}),
 		//自動清空dist資料夾
-		new CleanWebpackPlugin()
+		new CleanWebpackPlugin(),
 	],
 	// devtool: 'source-map'
 };

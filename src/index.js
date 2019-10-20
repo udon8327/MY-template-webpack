@@ -1,3 +1,3 @@
-import css from './sass/index.sass';
+import './sass/index.sass';
 
-$('h1').css('color','red');
+$('h1').css('color','aqua');
