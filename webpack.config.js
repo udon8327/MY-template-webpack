@@ -1,4 +1,3 @@
-const path = require('path');
 const webpack = require('webpack');
 const HtmlWebPackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
@@ -10,7 +9,7 @@ module.exports = {
 		login: './src/js/login.js'
 	},
 	output: {
-		path: path.resolve(__dirname,'/dist'),
+		path: __dirname + '/dist',
 		filename: 'js/[name].js'
 	},
 	plugins: [
@@ -19,13 +18,13 @@ module.exports = {
 			template: './src/index.pug',
 			filename: 'index.html',
 			hash: true,
-			chunks: ['index']
+			chunks: ['jquery','index']
 		}),
 		new HtmlWebPackPlugin({
 			template: './src/login.pug',
 			filename: 'login.html',
 			hash: true,
-			chunks: ['login']
+			chunks: ['jquery','login']
 		}),
 		//將css從js獨立拆出來
 		new MiniCssExtractPlugin({
@@ -56,29 +55,29 @@ module.exports = {
 				test: /\.pug$/,
 				use: ['html-loader','pug-html-loader']
 			},
-      {
-        test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
-        loader: 'url-loader',
-        options: {
-          limit: 10000,
+			{
+				test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
+				loader: 'url-loader',
+				options: {
+					limit: 10000,
 					name: 'img/[name].[ext]?[hash:7]',
-        }
-      },
-      {
-        test: /\.(mp4|webm|ogg|mp3|wav|flac|aac)(\?.*)?$/,
-        loader: 'url-loader',
-        options: {
-          limit: 10000,
+				}
+			},
+			{
+				test: /\.(mp4|webm|ogg|mp3|wav|flac|aac)(\?.*)?$/,
+				loader: 'url-loader',
+				options: {
+					limit: 10000,
 					name: 'media/[name].[ext]?[hash:7]',
-        }
-      },
-      {
-        test: /\.(woff2?|eot|ttf|otf)(\?.*)?$/,
-        loader: 'url-loader',
-        options: {
-          limit: 10000,
+				}
+			},
+			{
+				test: /\.(woff2?|eot|ttf|otf)(\?.*)?$/,
+				loader: 'url-loader',
+				options: {
+					limit: 10000,
 					name: 'fonts/[name].[ext]?[hash:7]',
-        }
+				}
 			},
 			{
 				test: /\.(js?x)?$/,
@@ -88,6 +87,17 @@ module.exports = {
 				exclude: /node_modules/
 			}
 		]
+	},
+	optimization: {
+		splitChunks: {
+			cacheGroups: {
+				commons: {
+					test: /jquery/,
+					name: 'jquery',
+					chunks: 'all'
+				}
+			}
+		}
 	},
 	// devServer: {
 	// 	port: 9000,
