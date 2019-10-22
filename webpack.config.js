@@ -18,13 +18,13 @@ module.exports = {
       template: "./src/index.pug",
       filename: "index.html",
       // hash: true,
-      chunks: ["vendor", "index"]
+      chunks: ["index","jquery"]
     }),
     new HtmlWebPackPlugin({
       template: "./src/login.pug",
       filename: "login.html",
       // hash: true,
-      chunks: ["vendor", "login"]
+      chunks: ["login","jquery"]
     }),
     new MiniCssExtractPlugin({
       filename: "css/[name].css"
@@ -35,25 +35,6 @@ module.exports = {
     }),
     new CleanWebpackPlugin()
   ],
-  optimization: {
-    splitChunks: {
-      chunks: "all",
-      cacheGroups: {
-        commons: {
-          chunks: "initial",
-          name: "common",
-          minChunks: 2,
-          maxInitialRequests: 5,
-          minSize: 0
-        },
-        vendors: {
-          test: /[\\/]node_modules[\\/]/,
-          name: "vendor",
-          chunks: "all"
-        }
-      }
-    }
-  },
   module: {
     rules: [
       {
