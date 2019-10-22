@@ -11,34 +11,51 @@ module.exports = {
 	},
 	output: {
 		path: path.resolve(__dirname, 'dist'),
-		filename: 'js/[name].js'
+		filename: 'js/[name].js',
 	},
 	plugins: [
 		new HtmlWebPackPlugin({
 			template: './src/index.pug',
 			filename: 'index.html',
 			hash: true,
-			chunks: ['jquery','index']
+			chunks: ['vendors','index','bootstrap']
 		}),
 		new HtmlWebPackPlugin({
 			template: './src/login.pug',
 			filename: 'login.html',
 			// hash: true,
-			chunks: ['jquery','login']
+			chunks: ['vendors','login','bootstrap']
 		}),
 		new MiniCssExtractPlugin({
 			filename: 'css/[name].css',
 		}),
 		new webpack.ProvidePlugin({
-			$: 'jquery'
+			$: 'jquery',
+			bootstrap: 'bootstrap'
 		}),
 		new CleanWebpackPlugin(),
 	],
+	optimization: {
+		splitChunks: {
+			cacheGroups: {
+				// commons: {
+				// 	test: /jquery/,
+				// 	name: 'jquery',
+				// 	chunks: 'all'
+				// },
+				vendors: {
+					test: /[\\/]node_modules[\\/]/,
+					name: "vendors",
+					chunks: 'all'
+				},
+			}
+		}
+	},
 	module: {
 		rules: [
 			{
 				test: /\.(html|pug|jade)$/,
-				use: ['html-loader','pug-html-loader']
+				use: ['html-loader','pug-html-loader'],
 			},
 			{
 				test: /\.(s?css|sass)$/,
@@ -49,38 +66,27 @@ module.exports = {
 							publicPath: '../',
 						},
 					},
-					'css-loader',
-					'postcss-loader',
-					'sass-loader',
+					'css-loader','postcss-loader','sass-loader',
 				],
 			},
 			{
-				test: /\.(png|jpe?g|gif|svg|webm|mp4|ogg|woff|woff2|ttf|eot)$/,
-				loader: 'url-loader',
-				options: {
-					limit: 10000,
-					name: 'img/[name].[ext]?[hash:7]',
-				}
+				test: /\.js$/,
+				use: 'babel-loader',
+				exclude: /node_modules/,
 			},
 			{
-				test: /\.(js?x)$/,
-				use: {
-					loader: 'babel-loader'
-				}, 
-				exclude: /node_modules/
+				test: /\.(png|jpe?g|gif|svg|webm|mp4|ogg|woff|woff2|ttf|eot)$/,
+        use: [
+          {
+            loader: 'url-loader',
+            options: {
+              limit: 8192,
+              name: 'img/[name].[ext]?[hash:7]',
+            },
+          },'image-webpack-loader',
+        ],
 			},
 		]
-	},
-	optimization: {
-		splitChunks: {
-			cacheGroups: {
-				commons: {
-					test: /jquery/,
-					name: 'jquery',
-					chunks: 'all'
-				}
-			}
-		}
 	},
 	// devServer: {
 	// 	port: 9000,
